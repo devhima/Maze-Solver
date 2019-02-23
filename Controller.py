@@ -43,10 +43,10 @@ episodes = 700
 trainingReportRate = 700
 
 # How many memories can the agent have?
-numMemories = 1
+numMemories = 99
 
 # Reverie mode is false by default
-reverie = False
+reverie = True
 
 # Retrain the agent after reverie?
 retrain = False

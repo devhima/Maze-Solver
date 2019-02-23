@@ -33,7 +33,7 @@ import sys
 from Observation import *
 from Reward import *
 from Action import *
-
+import subprocess as sp
 
 class Environment:
 
@@ -59,6 +59,7 @@ class Environment:
 			    z=1
 		    if z=='2':
 			    startPosition = [xP, yP]
+			    z=0
 		    z=int(z)
 		    nml.append(z)
 		    yP+=1
@@ -170,7 +171,9 @@ class Environment:
 		theObs.isTerminal = self.checkTerminal()
 		
 		if self.verbose:
+			self.env_print(self.currentState)
 			print "bot state:", self.currentState
+			
 
 		# Calculate the reward
 		rewardValue = self.calculateReward(lastActionValue)
@@ -186,6 +189,30 @@ class Environment:
 			self.currentState = self.randomizeStart(self.map)
 		else:
 			self.currentState = self.startState[:]
+
+
+	# print the environment
+	def env_print(self, agentState):
+		sp.call('clear',shell=True)
+		pX = 0
+		pY = 0
+		for i1 in self.map:
+			pY = 0
+			for i2 in i1:
+				#print "(" + str(pX) + ", " + str(pY) + ")",
+				if pX == agentState[1] and pY == agentState[0]:
+					if i2 != 1:
+						print "X ",
+				elif i2 == 1:
+					print "# ",
+				else:
+					if i2 == 0:
+						print "  ",
+					else:
+						print str(i2) + " ",
+				pY+=1
+			print "\n"
+			pX+=1
 
 
 	# Is agent in a terminal state?
