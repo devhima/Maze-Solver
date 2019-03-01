@@ -27,7 +27,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-import random
 import copy
 import sys
 from Observation import *
@@ -51,6 +50,7 @@ class Environment:
 	xP = 0
 	yP = 0
 	for i in lines:
+		yP = 0
 		ml = i.split(' ')
 		nml=[]
 		for x in ml:
@@ -58,14 +58,13 @@ class Environment:
 		    if z=='#':
 			    z=1
 		    if z=='2':
-			    startPosition = [xP, yP]
+			    startPosition = [yP, xP]
 			    z=0
 		    z=int(z)
 		    nml.append(z)
 		    yP+=1
 		map.append(nml)
 		xP+=1
-	#map = copy.deepcopy(mapx)
 	
 	# The current state
 	currentState = []
@@ -73,10 +72,8 @@ class Environment:
 	# The previous state
 	previousState = []
 	
-	# Hard-coded initial state (used unless randomStart = True)
-	# 0: bot x
-	# 1: bot y
-	startState = [1, 1]
+	# Hard-coded initial state (get startPosition from maze file)
+	startState = copy.deepcopy(startPosition)
 	
 	# Amount of reward at the goal
 	reward = 10.0
@@ -90,10 +87,6 @@ class Environment:
 	# Incremented every step
 	counter = 0
 
-	# Randomly generate a start state
-	randomStart = False
-	
-	randGenerator=random.Random()
 	lastActionValue = -1
 
 	# Print debuggin information
@@ -122,11 +115,8 @@ class Environment:
 
 	# Called to start the simulation
 	def env_start(self):
-		# Use hard-coded start state or randomly generated state?
-		if self.randomStart:
-			self.currentState = self.randomizeStart(self.map)
-		else:
-			self.currentState = self.startState[:]
+		# Use hard-coded start state 
+		self.currentState = self.startState[:]
 
 		# Make sure counter is reset
 		self.counter = 0
@@ -142,17 +132,6 @@ class Environment:
 		returnObs.worldState=self.currentState[:]
 		returnObs.availableActions = self.validActions()
 		return returnObs
-
-	# This creates a random initial state
-	# Agent will not be placed on a wall
-	def randomizeStart(self, map):
-		bot = []
-		while True:
-			bot = [1, 1]
-			if map[bot[1]][bot[0]] != 1:
-				break
-		state = bot
-		return state
 
 	# Update world state based on agent's action
 	def env_step(self,thisAction):
@@ -184,11 +163,8 @@ class Environment:
         
 	# reset the environment
 	def env_reset(self):
-		# use random start or hard-coded start state?
-		if self.randomStart:
-			self.currentState = self.randomizeStart(self.map)
-		else:
-			self.currentState = self.startState[:]
+		# use hard-coded start state?
+		self.currentState = self.startState[:]
 
 
 	# print the environment

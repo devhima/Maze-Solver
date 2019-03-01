@@ -43,21 +43,19 @@ episodes = 700
 trainingReportRate = 700
 
 # How many memories can the agent have?
-numMemories = 99
+numMemories = 1
 
 # Reverie mode is false by default
-reverie = True
+reverie = False
 
 # Retrain the agent after reverie?
 retrain = False
-
 
 #Max reward received in any iteration
 maxr = None
 
 # Set up environment for initial training
 gridEnvironment = Environment()
-gridEnvironment.randomStart = True
 gridEnvironment.verbose = False
 
 # Set up agent
@@ -83,8 +81,6 @@ for i in range(episodes):
 
 # Reset the environment for policy execution
 gridEnvironment.verbose = True
-gridEnvironment.randomStart = True # Don't change this or memories won't be created properly!
-
 gridAgent.verbose = True
 
 # Make a number of memories. Also doubles as testing
@@ -109,7 +105,6 @@ if reverie:
 
 	# Replaying memories creates the value table that the agent would have if all it had to go on was the memories
 	print "Replaying memories", len(gridAgent.memory)
-	gridEnvironment.randomStart = False # Don't change this for the replay
 	counter = 0
 	print "---"
 	for m in gridAgent.memory:
@@ -132,7 +127,6 @@ if reverie:
 	# Reset the environment for policy execution
 	gridEnvironment = Environment()
 	gridEnvironment.verbose = True
-	gridEnvironment.randomStart = True
 
 	gridAgent.gridEnvironment = gridEnvironment
 	gridAgent.agent_reset()
@@ -173,7 +167,6 @@ if retrain:
 
 	# Reset the environment for policy execution
 	gridEnvironment.verbose = True
-	gridEnvironment.randomStart = True
 	gridAgent.agent_reset()
 	
 	# Test new v table
